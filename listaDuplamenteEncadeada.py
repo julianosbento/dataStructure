@@ -1,34 +1,85 @@
 class ListaVaziaErro(Exception):
     pass
 
-
 class Noh():
-    def __init__(self, valor, esquerdo = None, direito = None): 
+    def __init__(self, valor, esquerdo = None, direito = None):
         self.valor = valor
         self.esquerdo = esquerdo
         self.direito = direito
 
 class Lista():
-    def __init__(self, tam, primeiro = None, ultimo = None):
+    def __init__(self, tam = 0, primeiro = None, ultimo = None):
         self.tam = tam
         self.primeiro = primeiro
         self.ultimo = ultimo
-
 
     def adicionar(self, valor):
         noh = Noh (valor)
         if self.tam == 0:
             self.primeiro = noh
+            self.ultimo = noh
         else:
-            ultimo = self.primeiro
-            while ultimo.direito is not None:
-                ultimo = ultimo.direito
-            ultimo.direito = noh
+            temp = self.ultimo
+            self.ultimo.direito = noh
+            self.ultimo = noh
+            self.ultimo.esquerdo = temp
         self.tam += 1
 
+    def adicionar_a_esquerda(self,valor):
+        noh = Noh (valor)
+        if self.tam == 0:
+            self.primeiro = noh
+            self.ultimo = noh
+        else:
+            temp = self.primeiro
+            self.primeiro.esquerdo = noh
+            self.primeiro = noh
+            self.primeiro.direito = temp
+        self.tam += 1
+
+    def remover (self):
+        deleted = None
+        if self.tam == 0:
+            erro = ListaVaziaErro ("Lista Vazia !")
+            raise erro
+        elif self.tam == 1:
+            deleted = self.primeiro.valor
+            self.primeiro = None
+            self.ultimo = None
+        else:
+            deleted = self.ultimo.valor
+            newUltimo = self.ultimo
+            self.ultimo = newUltimo.esquerdo
+            self.ultimo.direito = None
+        self.tam -= 1
+        return deleted
+
+    def remover_a_esquerda (self):
+        deleted = None
+        if self.tam == 0:
+            erro = ListaVaziaErro ("Lista Vazia !")
+            raise erro
+        elif self.tam == 1:
+            deleted = self.primeiro.valor
+            self.primeiro = None
+            self.ultimo = None
+        else:
+            deleted = self.primeiro.valor
+            newPrimeiro = self.primeiro
+            self.primeiro = newPrimeiro.direito
+            self.primeiro.esquerdo = None
+        self.tam -= 1
+        return deleted
+
+    def __iter__(self):
+        noh = self.primeiro
+        if noh == None:
+            return
+        while noh.direito is not None:
+            yield noh.valor
+            noh = noh.direito
 
 import unittest
-
 
 class NohTestes(unittest.TestCase):
     def test_init_com_valores_padrao(self):
