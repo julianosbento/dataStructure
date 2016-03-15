@@ -1,44 +1,62 @@
 import unittest
 
-
 class Pilha ():
     def __init__(self):
         self.lista = []
 
     def vazia (self):
-        return bool(self.lista)
+        return len(self.lista) == 0
 
     def topo (self):
         if self.lista:
             return self.lista [-1]
-
         raise PilhaVaziaErro ()
 
     def empilhar(self, valor):
         return self.lista.append(valor)
 
     def desempilhar (self):
-        try:
-            return self.lista.pop()
-        except:
-            raise PilhaVaziaErro()
+        if len (self.lista) == 0:
+            raise IndexError
+        else:
+            self.lista.pop()
 
-    def esta_balanceada (word):
-        nada = ''
+def esta_balanceada (word):
 
-        for letters in word:
-            if letters == '':
-                .vazia()
+    parentese = Pilha ()
+    colchete = Pilha ()
+    key = Pilha ()
 
+    for letters in word:
+        if letters == '(':
+            parentese.empilhar(0)
+        if letters == '[':
+            colchete.empilhar(0)
+        if letters == '{':
+            key.empilhar(0)
+        if letters == ')':
+            try:
+                parentese.desempilhar()
+            except IndexError:
+                return False
+        if letters == ']':
+            try:
+                colchete.desempilhar()
+            except IndexError:
+                return False
+        if letters == '}':
+            try:
+                key.desempilhar()
+            except IndexError:
+                return False
+    if parentese.vazia() and colchete.vazia() and key.vazia():
+        return True
+    else:
+        return False
     """
-    Função que calcula se expressão possui parenteses, colchetes e chaves balanceados
-    O Aluno deverá informar a complexidade de tempo e espaço da função
-    Deverá ser usada como estrutura de dados apenas a pilha feita na aula anterior
-    :param expressao: string com expressao a ser balanceada
-    :return: boleano verdadeiro se expressao está balanceada e falso caso contrário
+    Tempo de execução O(N) porque vai percorrer uma lista com o for.
+    O(N) para memória porque as pilhas crescem conforme são inputados elementos na lista
     """
-    pass
-
 
 class BalancearTestes(unittest.TestCase):
     def test_expressao_vazia(self):
