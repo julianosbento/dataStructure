@@ -10,7 +10,7 @@ class Pilha ():
     def topo (self):
         if self.lista:
             return self.lista [-1]
-        raise PilhaVaziaErro ()
+        raise IndexError
 
     def empilhar(self, valor):
         return self.lista.append(valor)
