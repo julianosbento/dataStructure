@@ -2,8 +2,37 @@
 # Só podem ser usadas as estruturas Pilha e Fila implementadas em aulas anteriores.
 # Deve ter análise de tempo e espaço para função avaliação
 
-'from aula5.fila import Fila'
+'''Tempo O(N) pois percorre a fila para adicionar os elementos e depois para desenfilar e avaliar com pilha
+Memória O(N) pois aumenta a conforme são adicionados os elementos e retirados'''
+
+#from aula5.fila import Fila
+#from aula4.pilha import Pilha
+
 from collections import deque
+
+class Pilha ():
+    def __init__(self):
+        self.lista = []
+
+    def __len__(self):
+        return len (self.lista)
+
+    def vazia (self):
+        return len(self.lista) == 0
+
+    def topo (self):
+        if self.lista:
+            return self.lista [-1]
+        raise IndexError
+
+    def empilhar(self, valor):
+        return self.lista.append(valor)
+
+    def desempilhar (self):
+        if len (self.lista) == 0:
+            raise IndexError
+        else:
+            self.lista.pop()
 
 class Fila():
     def __init__(self):
@@ -53,6 +82,8 @@ def analise_lexica(expressao):
     num = '0123456789'
     numVar = ''
     for letra in expressao:
+        if letra == '':
+            raise ErroLexico ('')
         if letra in set(letras):
             raise ErroLexico ('')
         if letra in '{[()]}+-*/.':
@@ -70,23 +101,85 @@ def analise_lexica(expressao):
 
 
 def analise_sintatica(fila):
-    """
-    Função que realiza analise sintática de tokens produzidos por analise léxica.
-    Executa validações sintáticas e se não houver erro retorn fila_sintatica para avaliacao
-    :param fila: fila proveniente de análise lexica
-    :return: fila_sintatica com elementos tokens de numeros
-    """
-    pass
 
+    tokens = Fila ()
+    numValor = 0
+    point = False
+    if len(fila) > 0:
+        for elemento in fila:
+            if elemento in set('{[()]}+-*/'):
+                if not numValor == 0:
+                    tokens.enfileirar(numValor)
+                numValor = 0
+                tokens.enfileirar(elemento)
+                point = False
+            else:
+                if elemento == '.':
+                    point = True
+                else:
+                    valor = float(elemento)
+                    if point:
+                        numValor += (valor / 10 ** len (elemento))
+                    else:
+                        numValor += valor
+        if not numValor == 0:
+            tokens.enfileirar(numValor)
+        return tokens
+    else:
+         raise ErroSintatico ('')
 
 def avaliar(expressao):
-    """
-    Função que avalia expressão aritmetica retornando se valor se não houver nenhum erro
-    :param expressao: string com expressão aritmética
-    :return: valor númerico com resultado
-    """
-    pass
 
+    avalia = analise_sintatica(analise_lexica(expressao))
+    resposta = Pilha ()
+    a, b, c = None, None, None
+    aux = 0
+    for elemento in avalia:
+        resposta.empilhar(elemento)
+
+        if len(resposta) >= 3:
+            a = resposta.desempilhar()
+            b = resposta.desempilhar()
+            c = resposta.desempilhar()
+            if str(b) in '+-*/' and str(a) not in '{[()]}' and str(c) not in '{[()]}':
+                if b == '+':
+                    aux = c + a
+                elif b == '-':
+                    aux = c - a
+                elif b == '*':
+                    aux = c * a
+                elif b == '/':
+                    aux = c / a
+                resposta.empilhar (aux)
+            else:
+                resposta.empilhar(c)
+                resposta.empilhar(b)
+                resposta.empilhar(a)
+        if str (elemento) in ')]}':
+            resposta.desempilhar()
+            aux = resposta.desempilhar()
+            resposta.desempilhar()
+            resposta.empilhar(aux)
+            if len(resposta) >= 3:
+                a = resposta.desempilhar()
+                b = resposta.desempilhar()
+                c = resposta.desempilhar()
+                if str(b) in '+-*/' and str(a) not in '{[()]}' and str(c) not in '{[()]}':
+                    if b == '+':
+                        aux = c + a
+                    elif b == '-':
+                        aux = c - a
+                    elif b == '*':
+                        aux = c * a
+                    elif b == '/':
+                        aux = c / a
+                    resposta.empilhar (aux)
+                else:
+                    resposta.empilhar(c)
+                    resposta.empilhar(b)
+                    resposta.empilhar(a)
+
+    return resposta.desempilhar()
 
 import unittest
 
