@@ -5,12 +5,12 @@
 '''Tempo O(N) pois percorre a fila para adicionar os elementos e depois para desenfilar e avaliar com pilha
 Memória O(N) pois aumenta a conforme são adicionados os elementos e retirados'''
 
-#from aula5.fila import Fila
-#from aula4.pilha import Pilha
+from aula5.fila import Fila
+from aula4.pilha import Pilha
 
 from collections import deque
 
-class Pilha ():
+'''class Pilha ():
     def __init__(self):
         self.lista = []
 
@@ -32,7 +32,7 @@ class Pilha ():
         if len (self.lista) == 0:
             raise IndexError
         else:
-            self.lista.pop()
+            return self.lista.pop()
 
 class Fila():
     def __init__(self):
@@ -68,7 +68,7 @@ class Fila():
 
 class FilaVaziaErro(Exception):
     pass
-
+'''
 class ErroLexico(Exception):
     pass
 
@@ -141,7 +141,7 @@ def avaliar(expressao):
             a = resposta.desempilhar()
             b = resposta.desempilhar()
             c = resposta.desempilhar()
-            if str(b) in '+-*/' and str(a) not in '{[()]}' and str(c) not in '{[()]}':
+            if str(a) not in '{[()]}' and str(c) not in '{[()]}' and str(b) in '+-*/' :
                 if b == '+':
                     aux = c + a
                 elif b == '-':
@@ -164,7 +164,7 @@ def avaliar(expressao):
                 a = resposta.desempilhar()
                 b = resposta.desempilhar()
                 c = resposta.desempilhar()
-                if str(b) in '+-*/' and str(a) not in '{[()]}' and str(c) not in '{[()]}':
+                if str(a) not in '{[()]}' and str(c) not in '{[()]}' and str(b) in '+-*/' :
                     if b == '+':
                         aux = c + a
                     elif b == '-':
