@@ -5,25 +5,27 @@ def _quick_recursivo(seq, inicio, final):
     if inicio >= final:
         return seq
     indice_pivot = final
-    pivot = seq[-1]
+    pivot = seq[indice_pivot]
     i_esquerda = inicio
-    i_direita = final - 1
+    i_direita = final
 
-    while i_esquerda <= i_direita:
+    while (i_esquerda < i_direita):
         if (seq[i_esquerda] <= pivot):
             i_esquerda += 1
         elif (seq[i_direita] >= pivot):
             i_direita -= 1
         else:
-            seq
+            seq[i_esquerda], seq[i_direita] = seq[i_direita], seq[i_esquerda]
 
+    seq[indice_pivot], seq[i_esquerda] = seq[i_esquerda], seq[indice_pivot]
 
-    # Resolver para sublista da esquerda
+    indice_pivot = i_esquerda
 
-    # Resolver para sublista da direita
+    _quick_recursivo(seq,inicio,indice_pivot-1)
+
+    _quick_recursivo(seq,indice_pivot+1,final)
 
     return seq
-
 
 def quick_sort(seq):
     return _quick_recursivo(seq, 0, len(seq) - 1)
