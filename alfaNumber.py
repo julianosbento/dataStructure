@@ -10,7 +10,7 @@ def gerar_alfa(s):
     for k in s:
         position = len (answer) -1
         while (position >= 0):
-            now = ans.pop(position)
+            now = answer.pop(position)
             time = regra.__getitem__(k)
             for i in time:
                 answer.append(now + tuple (i,))
